@@ -21,7 +21,7 @@ set(WITH_GFLAGS ON)
 set(WITH_GTEST OFF)
 set(WITH_UNWIND OFF)
     
-add_subdirectory(third_party/gflags)
+# add_subdirectory(third_party/gflags)
 # list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_BINARY_DIR}/third_party/gflags")
 add_subdirectory(third_party/glog)
 
@@ -29,4 +29,4 @@ set(gflags_DIR ${CMAKE_CURRENT_BINARY_DIR}/third_party/gflags)
 
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-target_link_libraries(${PROJECT_NAME} gflags::gflags glog::glog)
+target_link_libraries(${PROJECT_NAME} glog::glog)
