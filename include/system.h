@@ -1,5 +1,5 @@
 #pragma once
-class System{
-    public:
-        virtual void update() = 0;
+class System {
+  public:
+    virtual void update() = 0;
 };
