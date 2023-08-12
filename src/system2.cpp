@@ -1,4 +1,4 @@
-#include "system.h"
+#include "system.hpp"
 #include <glog/logging.h>
 
 class SecondSystem : public System {
