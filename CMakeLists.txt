@@ -15,8 +15,17 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 set(WITH_GFLAGS ON)
 set(WITH_GTEST OFF)
 set(WITH_UNWIND OFF)
-    
+
 add_subdirectory(third_party/glog)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+set(SOURCES
+    src/system1.cpp
+    src/system2.cpp
+    src/main.cpp
+)
+
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
 target_link_libraries(${PROJECT_NAME} glog::glog)

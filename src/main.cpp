@@ -1,4 +1,6 @@
 #include <glog/logging.h>
+#include "system1.cpp"
+#include "system2.cpp"
 
 int main(int argc, char* argv[]) {
 
@@ -9,6 +11,18 @@ int main(int argc, char* argv[]) {
     } else{
         google::InitGoogleLogging(argv[0]);
         gflags::ParseCommandLineFlags(&argc, &argv, true);
+    }
+    float time = 0;
+
+    FirstSystem s1;
+    SecondSystem s2;
+
+
+
+    while (time < 10){
+        s1.update();
+        s2.update();
+        time += 1;
     }
 
 
