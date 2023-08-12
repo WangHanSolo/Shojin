@@ -1,6 +1,5 @@
 #include <glog/logging.h>
-#include "system1.cpp"
-#include "system2.cpp"
+#include "simulator.hpp"
 
 int main(int argc, char* argv[]) {
     // if no glog related flags passed, we assume INFO level logging
@@ -13,12 +12,10 @@ int main(int argc, char* argv[]) {
     }
     float time = 0;
 
-    FirstSystem s1;
-    SecondSystem s2;
+    auto game = Simulator();
 
     while (time < 10) {
-        s1.update();
-        s2.update();
+        game.step();
         time += 1;
     }
 

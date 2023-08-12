@@ -19,12 +19,14 @@ set(WITH_UNWIND OFF)
 add_subdirectory(third_party/glog)
 
 set(SOURCES
-    src/system1.cpp
-    src/system2.cpp
-    src/main.cpp
+    core/systems/render_system.cpp
+    core/systems/collision_system.cpp
+    render/renderer.cpp
+    core/simulator.cpp
+    main.cpp
 )
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
