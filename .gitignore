@@ -18,11 +18,9 @@ __pycache__/
 # Ignore the version file since it changes often
 _version.py
 
-# ROS
-log
-install
-build
-COLCON_IGNORE
+# third party builds
+*build_cmake/
+*build/
 
 # Random
 *.lic
