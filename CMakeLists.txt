@@ -11,12 +11,18 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message( FATAL_ERROR "In-source build is not recommended. Choose an empty directory for build output." )
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
+set(CMAKE_BUILD_TYPE Debug)
 
 set(WITH_GFLAGS ON)
 set(WITH_GTEST OFF)
 set(WITH_UNWIND OFF)
 
 add_subdirectory(third_party/glog)
+add_subdirectory(third_party/glad)
+add_subdirectory(third_party/glm)
+
+set(BUILD_SHARED_LIBS ON)
+add_subdirectory(third_party/glfw)
 
 set(SOURCES
     core/systems/render_system.cpp
@@ -26,11 +32,15 @@ set(SOURCES
     main.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/glad ${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} glog::glog)
+target_link_libraries(${PROJECT_NAME} glog::glog glfw glad glm)
+
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
 
 OPTION(BUILD_UNIT_TESTS "Build Unit Tests"  ON)
 
