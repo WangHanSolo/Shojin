@@ -31,3 +31,12 @@ include_directories(${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} glog::glog)
+
+OPTION(BUILD_UNIT_TESTS "Build Unit Tests"  ON)
+
+IF (BUILD_UNIT_TESTS)
+    ENABLE_TESTING()
+    SUBDIRS(${CMAKE_CURRENT_LIST_DIR}/third_party/googletest)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/third_party/googletest/include)
+    SUBDIRS(test)
+ENDIF()
