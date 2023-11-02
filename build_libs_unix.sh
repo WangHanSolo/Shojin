@@ -15,5 +15,7 @@ cd $ROOT/build_cmake
 
 cmake ..
 make -j4
-
-# TODO: should I also add glog and gtest here?
+# 
+# 
+cd build_cmake/test
+ctest
