@@ -17,7 +17,5 @@ cmake ..
 make -j4
 # 
 # 
-# cd build_cmake/test
-# ctest
-
-# TODO: should I also add glog and gtest here?
+cd build_cmake/test
+ctest
