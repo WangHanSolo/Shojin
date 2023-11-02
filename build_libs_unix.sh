@@ -25,15 +25,6 @@ cd $ROOT/build_cmake
 
 cmake ..
 make -j4
-<<<<<<< HEAD
-# 
-# 
-cd build_cmake/test
-ctest
-=======
 
 cd build_cmake/test
 ctest
-
-# TODO: should I also add glog and gtest here?
->>>>>>> d7ae84d (opengl system skeleton)
