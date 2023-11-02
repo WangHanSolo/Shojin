@@ -9,8 +9,6 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
 
 RenderSystem::RenderSystem(){}
 RenderSystem::~RenderSystem(){
@@ -56,7 +54,6 @@ void RenderSystem::initialize(){
     }
 
     glfwMakeContextCurrent(window_);
-    glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -105,6 +102,7 @@ void RenderSystem::initialize(){
         glGetProgramInfoLog(shader_program_, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
+    glUseProgram(shader_program_);
     glDeleteShader(vertex_shader_);
     glDeleteShader(fragment_shader_);
 
@@ -149,10 +147,6 @@ void RenderSystem::initialize(){
 
     glfwSetWindowUserPointer(window_, this);
 
-    int windowWidth;
-    int windowHeight;
-    glfwGetWindowSize(window_, &windowWidth, &windowHeight);
-//    glViewport(0, 0, windowWidth, windowHeight);
     LOG(INFO) << "Render System Initialized";
 }
 
@@ -165,8 +159,6 @@ void RenderSystem::update() {
         glfwTerminate();
     }
 
-    processInput(window_);
-
     // render
     // ------
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -176,7 +168,6 @@ void RenderSystem::update() {
     // in the "MVP" uniform
     glUniformMatrix4fv(MatrixID_, 1, GL_FALSE, &MVP_[0][0]);
 
-    glUseProgram(shader_program_);
     glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
     glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
     // glBindVertexArray(0); // no need to unbind it every time 
@@ -187,16 +178,3 @@ void RenderSystem::update() {
     glfwPollEvents();
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-void processInput(GLFWwindow *window){
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height){
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-}
