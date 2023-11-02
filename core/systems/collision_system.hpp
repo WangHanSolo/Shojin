@@ -3,5 +3,6 @@
 
 class CollisionSystem final : public System {
   public:
+    void initialize();
     void update();
 };
