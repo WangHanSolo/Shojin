@@ -15,13 +15,19 @@ static const char *fragmentShaderSource = "#version 330 core\n"
     "}\n\0";
 
 static const char* transformVertexShaderSource = "#version 330 core\n"
-    "layout(location = 0) in vec3 vertexPosition_modelspace;\n"
-    "layout(location = 1) in vec2 vertexUV;\n"
+    "layout(location = 0) in vec3 vertex_position;\n"
+    "layout(location = 1) in vec2 vertex_normal;\n"
+
     "out vec2 UV;\n"
-    "uniform mat4 MVP;\n"
+
+
+    "uniform mat4 view_matrix;\n"
+    "uniform mat4 projection_matrix;\n"
+    "uniform mat4 model_matrix;\n"
+
     "void main(){\n"
-    "gl_Position =  MVP * vec4(vertexPosition_modelspace,1);\n"
-    "UV = vertexUV;\n"
+    "gl_Position =  projection_matrix * view_matrix * model_matrix * vec4(vertex_position,1);\n"
+    "UV = vertex_normal;\n"
     "}\n\0";
 
 
