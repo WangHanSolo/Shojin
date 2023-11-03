@@ -1,5 +1,6 @@
 #include "system.hpp"
 #include <glog/logging.h>
+#include <array>
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -20,6 +21,5 @@ class RenderSystem final : public System {
     unsigned int fragment_shader_ = 0;
     GLuint shader_program_ = 0;
     GLFWwindow* window_ = nullptr;                // GL Window
-    glm::mat4 MVP_;
-    GLuint MatrixID_;
+    std::array<float ,3> pos;
 };

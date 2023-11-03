@@ -23,11 +23,13 @@ RenderSystem::~RenderSystem(){
     glfwTerminate();
 }
 
-void CallbackError(int error, const char* description) {
-    fputs(description, stderr);
-    fputs("\n", stderr);
-            
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+                    glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+ 
+
 void RenderSystem::initialize(){
 
     #ifdef __APPLE__
@@ -39,7 +41,6 @@ void RenderSystem::initialize(){
     if (!glfwInit()){
         std::cout << "could not initialize glfw exiting" <<std::endl;
     }
-    glfwSetErrorCallback(CallbackError);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -128,22 +129,8 @@ void RenderSystem::initialize(){
     glBindVertexArray(0); 
 
 
-    // Get a handle for our "MVP" uniform
-    MatrixID_ = glGetUniformLocation(shader_program_, "MVP");
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-    // Camera matrix
-    glm::mat4 View = glm::lookAt(
-                        glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
-                        glm::vec3(0,0,0), // and looks at the origin
-                        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                     );
-    // Model matrix : an identity matrix (model will be at the origin)
-    glm::mat4 Model      = glm::mat4(1.0f);
-    // Our ModelViewProjection : multiplication of our 3 matrices
-    MVP_        = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
 
     glfwSetWindowUserPointer(window_, this);
 
@@ -152,6 +139,10 @@ void RenderSystem::initialize(){
 
 void RenderSystem::update() {
     LOG(INFO) << "Collision System Update";
+    if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS || glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwDestroyWindow(window_);
+    }
 
     if (window_ == NULL)
     {
@@ -164,9 +155,36 @@ void RenderSystem::update() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+    // Camera matrix
+    glm::mat4 view = glm::lookAt(
+                        glm::vec3(16,12,-12), // Camera is at (4,3,-3), in World Space
+                        glm::vec3(0,0,0), // and looks at the origin
+                        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                     );
+    // Model matrix : an identity matrix (model will be at the origin)
+    glm::mat4 model      = glm::mat4(1.0f);
+    // Our ModelViewProjection : multiplication of our 3 matrices
+//    pos[0]++;
+//    pos[1]++;
+//    pos[2]++;
+
+    pos[0] = pos[0] + 0.05;
+    pos[1] = pos[1] + 0.05;
+    pos[2] = pos[2] + 0.05;
+
+    model = glm::translate(glm::mat4(1), glm::vec3(pos[0], pos[1], pos[2]));
+    model = glm::rotate(model, float(angle), glm::vec3(axis.x(), axis.y(), axis.z()));
+    model = glm::scale(model, glm::vec3(5, 5, 5));
+
+    glm::mat4 mvp        = projection * view * model; // Remember, matrix multiplication is the other way around
+                                                      //
     // Send our transformation to the currently bound shader, 
     // in the "MVP" uniform
-    glUniformMatrix4fv(MatrixID_, 1, GL_FALSE, &MVP_[0][0]);
+    // Get a handle for our "MVP" uniform
+    GLuint MatrixID = glGetUniformLocation(shader_program_, "MVP");
+
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
     glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
     glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));

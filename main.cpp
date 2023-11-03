@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     float time = 0;
 
     auto game = Simulator();
-    while (1) {
+    while (time < 100) {
         game.step();
         time += 1;
     }

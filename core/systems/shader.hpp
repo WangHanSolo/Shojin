@@ -13,6 +13,7 @@ static const char *fragmentShaderSource = "#version 330 core\n"
     "{\n"
     "   FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
     "}\n\0";
+
 static const char* transformVertexShaderSource = "#version 330 core\n"
     "layout(location = 0) in vec3 vertexPosition_modelspace;\n"
     "layout(location = 1) in vec2 vertexUV;\n"
