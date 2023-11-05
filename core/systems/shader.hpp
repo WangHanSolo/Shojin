@@ -17,9 +17,7 @@ static const char *fragmentShaderSource = "#version 330 core\n"
 static const char* transformVertexShaderSource = "#version 330 core\n"
     "layout(location = 0) in vec3 vertex_position;\n"
     "layout(location = 1) in vec2 vertex_normal;\n"
-
     "out vec2 UV;\n"
-
 
     "uniform mat4 view_matrix;\n"
     "uniform mat4 projection_matrix;\n"

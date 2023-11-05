@@ -15,8 +15,9 @@ class RenderSystem final : public System {
     void initialize();
 
   private:
-    unsigned int VAO_ = 0;
-    unsigned int VBO_ = 0;
+    GLuint VAO_ = 0;
+    GLuint VBO_ = 0;
+    GLuint model_matrix_handle_;
     unsigned int vertex_shader_ = 0;
     unsigned int fragment_shader_ = 0;
     GLuint shader_program_ = 0;
