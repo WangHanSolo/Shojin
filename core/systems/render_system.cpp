@@ -63,13 +63,10 @@ void RenderSystem::initialize(){
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    // https://www.haroldserrano.com/blog/integrating-vertex-and-fragment-shaders-into-your-application
-    // build and compile our shader program
     // ------------------------------------
     // vertex shader
     vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader_, 1, &transformVertexShaderSource, NULL);
-//    glShaderSource(vertex_shader_, 1, &vertex_shader_Source, NULL);
 
     glCompileShader(vertex_shader_);
     // check for shader compile errors
@@ -168,14 +165,6 @@ void RenderSystem::update() {
     pos[1] = pos[1] + 0.05;
     pos[2] = pos[2] + 0.05;
 
-    // Model matrix
-//    model = glm::rotate(model, float(angle), glm::vec3(axis.x(), axis.y(), axis.z()));
-//    model = glm::scale(model, glm::vec3(5, 5, 5));
-
-                                                      //
-    // Send our transformation to the currently bound shader, 
-    // in the "MVP" uniform
-    // Get a handle for our "MVP" uniform
 
     GLuint view_matrix_id = glGetUniformLocation(shader_program_, "view_matrix");
     glUniformMatrix4fv(view_matrix_id, 1, GL_FALSE, &view[0][0]);
@@ -183,10 +172,10 @@ void RenderSystem::update() {
     GLuint projection_matrix_id = glGetUniformLocation(shader_program_, "projection_matrix");
     glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, &projection[0][0]);
 
-
-//    glBindBuffer(GL_ARRAY_BUFFER, model_matrix_handle_);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &model[0][0], GL_DYNAMIC_DRAW);
     {
+        // model = glm::rotate(model, float(angle), glm::vec3(axis.x(), axis.y(), axis.z()));
+        // model = glm::scale(model, glm::vec3(5, 5, 5));
+
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos[0], pos[1], pos[2]));
         GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
         glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
