@@ -63,13 +63,10 @@ void RenderSystem::initialize(){
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    // https://www.haroldserrano.com/blog/integrating-vertex-and-fragment-shaders-into-your-application
-    // build and compile our shader program
     // ------------------------------------
     // vertex shader
     vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader_, 1, &transformVertexShaderSource, NULL);
-//    glShaderSource(vertex_shader_, 1, &vertex_shader_Source, NULL);
 
     glCompileShader(vertex_shader_);
     // check for shader compile errors
@@ -112,6 +109,7 @@ void RenderSystem::initialize(){
 
     glGenVertexArrays(1, &VAO_);
     glGenBuffers(1, &VBO_);
+    glGenBuffers(1, &model_matrix_handle_);
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(VAO_);
 
@@ -155,6 +153,7 @@ void RenderSystem::update() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // Projection matrix
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
     // Camera matrix
     glm::mat4 view = glm::lookAt(
@@ -162,33 +161,47 @@ void RenderSystem::update() {
                         glm::vec3(0,0,0), // and looks at the origin
                         glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                      );
-    // Model matrix : an identity matrix (model will be at the origin)
-    glm::mat4 model      = glm::mat4(1.0f);
-    // Our ModelViewProjection : multiplication of our 3 matrices
-//    pos[0]++;
-//    pos[1]++;
-//    pos[2]++;
-
     pos[0] = pos[0] + 0.05;
     pos[1] = pos[1] + 0.05;
     pos[2] = pos[2] + 0.05;
 
-    model = glm::translate(glm::mat4(1), glm::vec3(pos[0], pos[1], pos[2]));
-    model = glm::rotate(model, float(angle), glm::vec3(axis.x(), axis.y(), axis.z()));
-    model = glm::scale(model, glm::vec3(5, 5, 5));
 
-    glm::mat4 mvp        = projection * view * model; // Remember, matrix multiplication is the other way around
-                                                      //
-    // Send our transformation to the currently bound shader, 
-    // in the "MVP" uniform
-    // Get a handle for our "MVP" uniform
-    GLuint MatrixID = glGetUniformLocation(shader_program_, "MVP");
+    GLuint view_matrix_id = glGetUniformLocation(shader_program_, "view_matrix");
+    glUniformMatrix4fv(view_matrix_id, 1, GL_FALSE, &view[0][0]);
 
-    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+    GLuint projection_matrix_id = glGetUniformLocation(shader_program_, "projection_matrix");
+    glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, &projection[0][0]);
 
-    glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-    glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
-    // glBindVertexArray(0); // no need to unbind it every time 
+    {
+        // model = glm::rotate(model, float(angle), glm::vec3(axis.x(), axis.y(), axis.z()));
+        // model = glm::scale(model, glm::vec3(5, 5, 5));
+
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos[0], pos[1], pos[2]));
+        GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
+        glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
+
+        glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        glBindBuffer(GL_ARRAY_BUFFER, VAO_);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_);
+        glBindBuffer(GL_ARRAY_BUFFER, model_matrix_handle_);
+    
+        glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
+    }
+
+    {
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 1, 2));
+        GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
+        glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
+
+        glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        glBindBuffer(GL_ARRAY_BUFFER, VAO_);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_);
+        glBindBuffer(GL_ARRAY_BUFFER, model_matrix_handle_);
+    
+        glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------
