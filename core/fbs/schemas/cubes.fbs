@@ -1,0 +1,10 @@
+struct Vec3{
+    x: float;
+    y: float;
+    z: float;
+}
+table Cubes{
+    positions: [Vec3];
+}
+
+root_type Cubes;

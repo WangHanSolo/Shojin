@@ -20,11 +20,29 @@ set(WITH_UNWIND OFF)
 add_subdirectory(third_party/glog)
 add_subdirectory(third_party/glad)
 add_subdirectory(third_party/glm)
+add_subdirectory(third_party/flatbuffers)
+
+set (FBS_SCHEMAS
+    ${SCHEMAS_PATH}/cubes.fbs
+
+)
+
+add_custom_command(
+    OUTPUT ${CMAKE_SOURCE_DIR}/core/fbs
+    COMMAND flatc ${FLATC_ARGS}
+            -o ${CMAKE_SOURCE_DIR}/core/fbs
+            --cpp ${schema}
+            --gen-mutable
+    DEPENDS ${FLATC_TARGET} ${schema}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/core/fbs/schemas
+    COMMENT "Building ${schema} flatbuffers..."
+)
 
 set(BUILD_SHARED_LIBS ON)
 add_subdirectory(third_party/glfw)
 
 set(SOURCES
+    core/systems/init_system.cpp
     core/systems/render_system.cpp
     core/systems/collision_system.cpp
     render/renderer.cpp
@@ -32,11 +50,11 @@ set(SOURCES
     main.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/third_party/glad ${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/glad ${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render ${CMAKE_SOURCE_DIR}/third_party/flatbuffers)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} glog::glog glfw glad glm)
+target_link_libraries(${PROJECT_NAME} glog::glog glfw glad glm flatbuffers)
 
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
