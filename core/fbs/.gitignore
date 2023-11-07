@@ -1,1 +1,2 @@
+# ignore generated fbs files
 *.h

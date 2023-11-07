@@ -15,6 +15,7 @@ make -j4
 make install
 popd
 
+# TODO: Do this in the cmake file?
 mkdir -p build_cmake/third_party/flatbuffers
 cd build_cmake/third_party/flatbuffers
 
