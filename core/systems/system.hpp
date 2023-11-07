@@ -17,5 +17,3 @@ class System {
     inline static flatbuffers::FlatBufferBuilder fbb_ = flatbuffers::FlatBufferBuilder(1024);
     inline static buffer fb_buffer_ = buffer();
 };
-
-// flatbuffers::FlatBufferBuilder System::fbb_(1024);

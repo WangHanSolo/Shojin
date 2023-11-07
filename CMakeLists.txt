@@ -11,7 +11,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message( FATAL_ERROR "In-source build is not recommended. Choose an empty directory for build output." )
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build.")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
 
 set(WITH_GFLAGS ON)
 set(WITH_GTEST OFF)
@@ -24,18 +25,11 @@ add_subdirectory(third_party/flatbuffers)
 
 set (FBS_SCHEMAS
     ${SCHEMAS_PATH}/cubes.fbs
-
 )
 
-add_custom_command(
-    OUTPUT ${CMAKE_SOURCE_DIR}/core/fbs
-    COMMAND flatc ${FLATC_ARGS}
-            -o ${CMAKE_SOURCE_DIR}/core/fbs
-            --cpp ${schema}
-            --gen-mutable
-    DEPENDS ${FLATC_TARGET} ${schema}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/core/fbs/schemas
-    COMMENT "Building ${schema} flatbuffers..."
+set(SRC_FBS
+    #    core/fbs/schemas/cubes.fbs
+    cubes.fbs
 )
 
 set(BUILD_SHARED_LIBS ON)
