@@ -6,6 +6,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "fbs/cubes_generated.h"
+
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -136,11 +138,7 @@ void RenderSystem::initialize(){
 }
 
 void RenderSystem::update() {
-    LOG(INFO) << "Collision System Update";
-    if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS || glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        glfwDestroyWindow(window_);
-    }
+    LOG(INFO) << "Render System Update";
 
     if (window_ == NULL)
     {
@@ -148,6 +146,11 @@ void RenderSystem::update() {
         glfwTerminate();
     }
 
+    // kill window if Q or escape is pressed
+    if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS || glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwDestroyWindow(window_);
+    }
     // render
     // ------
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -161,9 +164,7 @@ void RenderSystem::update() {
                         glm::vec3(0,0,0), // and looks at the origin
                         glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                      );
-    pos[0] = pos[0] + 0.05;
-    pos[1] = pos[1] + 0.05;
-    pos[2] = pos[2] + 0.05;
+
 
 
     GLuint view_matrix_id = glGetUniformLocation(shader_program_, "view_matrix");
@@ -172,11 +173,12 @@ void RenderSystem::update() {
     GLuint projection_matrix_id = glGetUniformLocation(shader_program_, "projection_matrix");
     glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, &projection[0][0]);
 
-    {
-        // model = glm::rotate(model, float(angle), glm::vec3(axis.x(), axis.y(), axis.z()));
-        // model = glm::scale(model, glm::vec3(5, 5, 5));
+    //  Get cubes from fb
+    auto cubes = GetCubes(fb_buffer_.ptr);
+    auto positions = cubes->positions();
 
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos[0], pos[1], pos[2]));
+    for (auto pos : *positions){
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos->x(), pos->y(), pos->z()));
         GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
         glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
 
@@ -186,19 +188,7 @@ void RenderSystem::update() {
         glBindBuffer(GL_ARRAY_BUFFER, model_matrix_handle_);
     
         glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
-    }
 
-    {
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 1, 2));
-        GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
-        glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
-
-        glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        glBindBuffer(GL_ARRAY_BUFFER, VAO_);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-        glBindBuffer(GL_ARRAY_BUFFER, model_matrix_handle_);
-    
-        glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
