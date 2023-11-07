@@ -23,15 +23,6 @@ add_subdirectory(third_party/glad)
 add_subdirectory(third_party/glm)
 add_subdirectory(third_party/flatbuffers)
 
-set (FBS_SCHEMAS
-    ${SCHEMAS_PATH}/cubes.fbs
-)
-
-set(SRC_FBS
-    #    core/fbs/schemas/cubes.fbs
-    cubes.fbs
-)
-
 set(BUILD_SHARED_LIBS ON)
 add_subdirectory(third_party/glfw)
 
