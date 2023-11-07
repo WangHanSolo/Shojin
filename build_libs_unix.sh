@@ -7,8 +7,8 @@ TYPE=Debug
 
 git submodule update --init --recursive
 
-mkdir -p build_cmake/third_party/gflags
-cd build_cmake/third_party/gflags
+mkdir -p $ROOT/build_cmake/third_party/gflags
+cd $ROOT/build_cmake/third_party/gflags
 
 cmake  -DCMAKE_DEBUG_POSTFIX="" -DBUILD_SHARED_LIBS=ON -DINSTALL_LIBS=ON -DCMAKE_BUILD_TYPE=$TYPE -DCMAKE_INSTALL_PREFIX:PATH=$ROOT/build_cmake/third_party/gflags $ROOT/third_party/gflags
 make -j4
@@ -16,12 +16,11 @@ make install
 popd
 
 # TODO: Do this in the cmake file?
-mkdir -p build_cmake/third_party/flatbuffers
-cd build_cmake/third_party/flatbuffers
+mkdir -p $ROOT/build_cmake/third_party/flatbuffers
+cd $ROOT/build_cmake/third_party/flatbuffers
 
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$TYPE -DCMAKE_INSTALL_PREFIX:PATH=$ROOT/build_cmake/third_party/flatbuffers $ROOT/third_party/flatbuffers
 make -j4 all
-popd
  
 cd $ROOT/core/fbs/schemas
 $ROOT/build_cmake/third_party/flatbuffers/flatc --cpp --gen-mutable -o ../  *
@@ -39,5 +38,5 @@ cd $ROOT/build_cmake
 cmake -DCMAKE_BUILD_TYPE=$TYPE ..
 make -j4
 
-cd build_cmake/test
+cd $ROOT/build_cmake/test
 ctest
