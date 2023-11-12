@@ -13,12 +13,25 @@ InitSystem::~InitSystem(){
 }
 
 void InitSystem::initialize(){
-     Vec3 points[] = { Vec3(1.0f, 1.0f, 1.0f), Vec3(4.0f, 5.0f, 6.0f)  };
-     auto path = fbb_.CreateVectorOfStructs(points, 2);
-     auto cubes = CreateCubes(fbb_, path);
-     fbb_.Finish(cubes);
-     fb_buffer_.ptr = fbb_.GetBufferPointer();
-     fb_buffer_.size = fbb_.GetSize(); 
+
+    Vec3 pos = Vec3(0.0, 0.0f, 0.0f);
+    Vec3 accel = Vec3(0.01, 0.01, 0.01);
+    Vec3 vel = Vec3(0.05, 0.05, 0.05);
+    float mass = 1;
+    // create a cube
+    auto cube = CreateCube(fbb_, &pos, &accel, &vel, mass);
+
+    // create flatbuffer vector of cubes
+    std::vector<flatbuffers::Offset<Cube>> cubes_vector{cube};
+    auto cubes_fbb_vector = fbb_.CreateVector(cubes_vector);
+    LOG(INFO) << "init with size: " << cubes_vector.size();
+
+    // Create parent cubes fb object
+    auto cubes = CreateCubes(fbb_, cubes_fbb_vector);
+    fbb_.Finish(cubes);
+
+    fb_buffer_.ptr = fbb_.GetBufferPointer();
+    fb_buffer_.size = fbb_.GetSize(); 
 }
 
 void InitSystem::update(){

@@ -3,8 +3,19 @@ struct Vec3{
     y: float;
     z: float;
 }
+table Cube{
+    /// position of cube
+    pos: Vec3;        
+    /// acceleration of cube
+    accel: Vec3;  
+    /// velocity of cube
+    vel: Vec3;    
+    /// mass of cube
+    mass: float;    
+}
+
 table Cubes{
-    positions: [Vec3];
+    cubes: [Cube];
 }
 
 root_type Cubes;

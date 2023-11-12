@@ -30,6 +30,7 @@ set(SOURCES
     core/systems/init_system.cpp
     core/systems/render_system.cpp
     core/systems/collision_system.cpp
+    core/systems/physics_system.cpp
     render/renderer.cpp
     core/simulator.cpp
     main.cpp

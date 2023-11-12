@@ -174,21 +174,25 @@ void RenderSystem::update() {
     glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, &projection[0][0]);
 
     //  Get cubes from fb
-    auto cubes = GetCubes(fb_buffer_.ptr);
-    auto positions = cubes->positions();
+    auto cubes_fb_vector_ptr = GetCubes(fb_buffer_.ptr);
 
-    for (auto pos : *positions){
+    auto cubes_vector = cubes_fb_vector_ptr->cubes();
+    for (int i = 0; i < cubes_vector->size(); i++){
+        
+        auto cube = cubes_vector->Get(i);
+        auto pos = cube->pos();
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos->x(), pos->y(), pos->z()));
+        LOG(INFO) << "x coord: " << pos->x();
         GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
         glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
-
+ 
         glBindVertexArray(VAO_); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glBindBuffer(GL_ARRAY_BUFFER, VAO_);
         glBindBuffer(GL_ARRAY_BUFFER, VBO_);
         glBindBuffer(GL_ARRAY_BUFFER, model_matrix_handle_);
     
         glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices));
-
+ 
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
