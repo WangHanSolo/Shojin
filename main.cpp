@@ -1,5 +1,5 @@
 #include <glog/logging.h>
-#include "simulator.hpp"
+#include "shojin.hpp"
 
 
 #include <iostream>
@@ -21,12 +21,13 @@ int main(int argc, char* argv[])
         gflags::ParseCommandLineFlags(&argc, &argv, true);
     }
 
-    float time = 0;
+    auto clock = ShojinClock(100,1);
+    auto shojin = Shojin(clock);
 
-    auto game = Simulator();
-    while (time < 100) {
-        game.step();
-        time += 1;
+    bool run = true;
+
+    while (run) {
+        run = shojin.step();
     }
 
     // uncomment this call to draw in wireframe polygons.

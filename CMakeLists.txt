@@ -31,7 +31,7 @@ set(SOURCES
     src/systems/render_system.cpp
     src/systems/collision_system.cpp
     src/systems/physics_system.cpp
-    src/simulator.cpp
+    src/shojin.cpp
     main.cpp
 )
 

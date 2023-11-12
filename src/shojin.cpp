@@ -1,10 +1,10 @@
-#include "simulator.hpp"
+#include "shojin.hpp"
 #include "systems/init_system.hpp"
 #include "systems/collision_system.hpp"
 #include "systems/render_system.hpp"
 #include "systems/physics_system.hpp"
 
-Simulator::Simulator() {
+Shojin::Shojin(ShojinClock& clock): clock_(clock) {
 
     std::unique_ptr<System> init_system_ptr = std::make_unique<InitSystem>();
     std::unique_ptr<System> render_system_ptr = std::make_unique<RenderSystem>();
@@ -22,8 +22,10 @@ Simulator::Simulator() {
     systems_.push_back(std::move(physics_system_ptr));
 }
 
-void Simulator::step() {
+bool Shojin::step() {
+    if (!clock_.update()) return false;
     for (auto& system : systems_) {
         system->update();
     }
+    return true;
 }
