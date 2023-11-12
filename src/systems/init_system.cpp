@@ -16,7 +16,7 @@ void InitSystem::initialize(){
 
     Vec3 pos = Vec3(0.0, 0.0f, 0.0f);
     Vec3 accel = Vec3(0.01, 0.01, 0.01);
-    Vec3 vel = Vec3(0.05, 0.05, 0.05);
+    Vec3 vel = Vec3(0.01, 0.01, 0.01);
     float mass = 1;
     // create a cube
     auto cube = CreateCube(fbb_, &pos, &accel, &vel, mass);

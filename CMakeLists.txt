@@ -27,16 +27,15 @@ set(BUILD_SHARED_LIBS ON)
 add_subdirectory(third_party/glfw)
 
 set(SOURCES
-    core/systems/init_system.cpp
-    core/systems/render_system.cpp
-    core/systems/collision_system.cpp
-    core/systems/physics_system.cpp
-    render/renderer.cpp
-    core/simulator.cpp
+    src/systems/init_system.cpp
+    src/systems/render_system.cpp
+    src/systems/collision_system.cpp
+    src/systems/physics_system.cpp
+    src/simulator.cpp
     main.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/third_party/glad ${CMAKE_SOURCE_DIR}/core ${CMAKE_SOURCE_DIR}/render ${CMAKE_SOURCE_DIR}/third_party/flatbuffers)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/glad ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/third_party/flatbuffers)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

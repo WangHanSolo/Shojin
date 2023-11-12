@@ -31,13 +31,6 @@ fi
 cd $ROOT/core/fbs/schemas
 $ROOT/build_cmake/third_party/flatbuffers/flatc --cpp --gen-mutable -o ../  *
 
-
-mkdir googletest
-pushd googletest
-cmake -DCMAKE_INSTALL_PREFIX:PATh=$ROOT/build_cmake/third_party/googletest $ROOT/third_party/googletest
-make -j4
-make install
-
 cd $ROOT/build_cmake
 
 cmake -DCMAKE_BUILD_TYPE=$TYPE ..
