@@ -1,12 +1,12 @@
 add_executable(
-    test_test
-    test.cpp
+    shojin_clock
+    shojin_clock/shojin_clock.cpp
 )
 
 target_link_libraries(
-    test_test
+    shojin_clock
     GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(test_test)
+gtest_discover_tests(shojin_clock)

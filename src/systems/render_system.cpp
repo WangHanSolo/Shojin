@@ -182,7 +182,6 @@ void RenderSystem::update() {
         auto cube = cubes_vector->Get(i);
         auto pos = cube->pos();
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos->x(), pos->y(), pos->z()));
-        LOG(INFO) << "x coord: " << pos->x();
         GLuint model_matrix_id = glGetUniformLocation(shader_program_, "model_matrix");
         glUniformMatrix4fv(model_matrix_id, 1, GL_FALSE, &model[0][0]);
  

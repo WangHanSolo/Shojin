@@ -1,7 +1,8 @@
 #include <chrono>
 
 struct ShojinClock {
-    ShojinClock(int duration, int dt) : duration(duration), dt(dt){}
+    // TODO; should check if duration and dt are valid...
+    ShojinClock(int duration, int dt) : duration(duration), dt(dt), time(0){}
     std::chrono::milliseconds duration;
     std::chrono::milliseconds time;
     std::chrono::milliseconds dt;
